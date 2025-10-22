@@ -20,7 +20,7 @@
 |API Base URL|api.open-notify.org
 |Endpoint for current ISS location | http://api.open-notify.org/iss-now.json
 |Sample response format |<img width="683" height="179" alt="image" src="https://github.com/user-attachments/assets/2d58774d-b899-4166-aadf-91ed74eb7496" />
-|Explanation | |Explanation | Longitude and latitude are given to the API. Space Bot reads it and sends co-ordinates to the Geocoding API for location data. 
+|Explanation | Longitude and latitude are given to the API. Space Bot reads it and sends co-ordinates to the Geocoding API for location data. 
 
 
 
