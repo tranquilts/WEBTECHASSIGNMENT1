@@ -3,40 +3,42 @@
 # Webex Messaging API 
 |Criteria |Details|
 ----------|-------|
-|API Base URL |____________________________
-|Authentication Method| _____________________________
-|Endpoint in list rooms| ______________________________
-|Endpoint to get messages | ___________________________
-|Endpoint to send messages | __________________________
-|Required headers |_____________________________________
-|Sample full GET or POST request | '_____________________
+|API Base URL |https://webexapis.com
+|Authentication Method| Bearer Token (Auth2.0)
+|Endpoint in list rooms| /rooms
+|Endpoint to get messages |GET /messages?roomID=<room_id>
+|Endpoint to send messages |POST /messages
+|Required headers |Authorization: Bearer <access_token>
+Content Type: application/json
+|Sample full GET or POST request | 
 
 ## ISS Current Location API 
 |Criteria | Details |
 ----------|---------|
-|API Base URL|_________________________
-|Endpoint for current ISS location |____________________________
-|Sample response format |_______________________________________
+|API Base URL|api.open-notify.org
+|Endpoint for current ISS location | http://api.open-notify.org/iss-now.json
+|Sample response format |
 
 ## Section 3: Geocoding API
 
 |Criteria |Details |
 ----------|--------|
-|Provider used (circle one) | **Location IQ)
-|API Base URL |________________________
-|Endpoint for reverse geocoding |____________________
-|Authentication method |_____________________________
-|Required query parameters |_________________________
-|Sample request with latitude/longitude|________________
-|Sample JSON response (formatted example) |____________________
+|Provider used | MapQuest
+|API Base URL |https://www.mapquestapi.com/geocoding/v1/address
+|Endpoint for reverse geocoding |http://www.mapquestapi.com/geocoding/v1/reverse
+|Authentication method | Users must set up a free MapQuest Developer account and get an API key.
+|Required query parameters |key - the api key.
+location - Co-ordinates for latitude, longitude
+|Sample request with latitude/longitude|
+|Sample JSON response (formatted example) |
 
 ## Epoch to Time Conversion (Python time module)
 
 |Criteria | Details|
 ----------|--------|
-|Library used | ____________________________
-|Function used to convert epoch |_________________________
-|Sample code to convert timestamp|________________________
+|Library used | Time
+|Function used to convert epoch |time.localtime(), time.strftime()
+|Sample code to convert timestamp|
 ---
 ---
 | Output(human-readable code)|
