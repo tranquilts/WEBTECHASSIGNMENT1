@@ -51,31 +51,17 @@
 
 Web Architecture & MVC Design 
 ### Web Architecture - Server Client Model
-- **Client**:________________________
-- **Server**:________________________
-- (Communication between them & include a block diagram)
-
-  ### RESTful API Usage
-  -
-  -
-  -
-
-  ### MVC Pattern in Space Bot
-  | Component | Description |
-  ------------|-------------|
-  |**Model**|
-  |**View**|
-  |**Controller**| |
+Client Layer: Webex platform where hsers send /seconds commands.
+Application Layer: Python script plays the role of a bot handling logic and API requests.
+Presentation Layer: Webex room messages displays results to users. 
 
 
-  ###Example:
-  - Model:
-  - View:
-  - Controller
+MVC Design
 
-    ---
-    ### Notes
+| Component | Description |
+------------|-------------|
+|Model       | Data handling (API responses for ISS and Geocoding).
+|View        | Output messages displayed in Webex room.
+|Controller  | Python code processes commands, manages timing and shows results.
 
-
-    
   
