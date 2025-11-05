@@ -13,7 +13,7 @@ def get_access_token():
     if choice.lower() == "y":
         return "Bearer " + input("Enter your Webex Access Token: ")
     else:
-        return "Bearer MGVkYjVhZmQtZGY2Ni00YjgwLWFiZWMtNDRmNjhiNzRjZWIyYTZkNGU1ZjktMDhi_P0A1_251b8f7b-fbc7-4534-b240-867707e063a8"
+        return ""
 
 
 #Get Webex rooms
@@ -133,7 +133,7 @@ def main():
     access_token = get_access_token()
     rooms = get_webex_rooms(access_token)
     room_id = choose_room(rooms)
-    geo_key = "KwKBVRqxrNymzfugaM6M5nhUSxNYwIYY"
+    geo_key = ""
 
     print("\nMonitoring room for /seconds messages....\n")
 
