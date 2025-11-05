@@ -1,197 +1,160 @@
-###############################################################
-#This is just a starter code for the assignment 1, 
-# you need to follow the assignment brief to complete all the tasks required by the assessemnt brief
-#
-#  This program:
-# - Asks the user to enter an access token or use the hard coded access token.
-# - Lists the user's Webex rooms.
-# - Asks the user which Webex room to monitor for "/seconds" of requests.
-# - Monitors the selected Webex Team room every second for "/seconds" messages.
-# - Discovers GPS coordinates of the ISS flyover using ISS API.
-# - Display the geographical location using geolocation API based on the GPS coordinates.
-# - Formats and sends the results back to the Webex Team room.
-#
-# The student will:
-# 1. Import libraries for API requests, JSON formatting, epoch time conversion, and iso3166.
-# 2. Complete the if statement to ask the user for the Webex access token.
-# 3. Provide the URL to the Webex room API.
-# 4. Create a loop to print the type and title of each room.
-# 5. Provide the URL to the Webex messages API.
-# 6. Provide the URL to the ISS Current Location API.
-# 7. Record the ISS GPS coordinates and timestamp.
-# 8. Convert the timestamp epoch value to a human readable date and time.
-# 9. Provide your Geoloaction API consumer key.
-# 10. Provide the URL to the Geoloaction address API.
-# 11. Store the location received from the Geoloaction API in a variable.
-# 12. Complete the code to format the response message.
-# 13. Complete the code to post the message to the Webex room.
-###############################################################
- 
-# 1. Import libraries for API requests, JSON formatting, epoch time conversion, and iso3166.
+# ISS Tracker + Webex Space Bot
 
-<!!!REPLACEME with code for libraries>
+# 1. Import libraries
+import requests
+import json
+import time
+from iso3166 import countries
 
-# 2. Complete the if statement to ask the user for the Webex access token.
-choice = input("Do you wish to use the hard-coded Webex token? (y/n) ")
 
-<!!!REPLACEME with if statements to ask user for the Webex Access Token!!!>
-else:
-    accessToken = "Bearer <!!!REPLACEME with hard-coded token!!!>"
-
-# 3. Provide the URL to the Webex room API.
-r = requests.get(   "<!!!REPLACEME with URL!!!>",
-                    headers = {"Authorization": accessToken}
-                )
-
-#######################################################################################
-# DO NOT EDIT ANY BLOCKS WITH r.status_code
-if not r.status_code == 200:
-    raise Exception("Incorrect reply from Webex API. Status code: {}. Text: {}".format(r.status_code, r.text))
-#######################################################################################
-
-# 4. Create a loop to print the type and title of each room.
-print("\nList of available rooms:")
-rooms = r.json()["items"]
-for room in rooms:
-    <!!!REPLACEME with print code to finish the loop>
-
-#######################################################################################
-# SEARCH FOR WEBEX ROOM TO MONITOR
-#  - Searches for user-supplied room name.
-#  - If found, print "found" message, else prints error.
-#  - Stores values for later use by bot.
-# DO NOT EDIT CODE IN THIS BLOCK
-#######################################################################################
-
-<!!!REPLACEME with code to start the loop and add break at appropriate place>:
-    roomNameToSearch = input("Which room should be monitored for the /seconds messages? ")
-    roomIdToGetMessages = None
-    
-    for room in rooms:
-        if(room["title"].find(roomNameToSearch) != -1):
-            print ("Found rooms with the word " + roomNameToSearch)
-            print(room["title"])
-            roomIdToGetMessages = room["id"]
-            roomTitleToGetMessages = room["title"]
-            print("Found room: " + roomTitleToGetMessages)
-            break
-
-    if(roomIdToGetMessages == None):
-        print("Sorry, I didn't find any room with " + roomNameToSearch + " in it.")
-        print("Please try again...")
+# 2. Webex Token
+def get_access_token():
+    choice = input("Do you wish to use the hard-coded Webex token? (y/n): ")
+    if choice.lower() == "y":
+        return "Bearer " + input("Enter your Webex Access Token: ")
     else:
-        <!!!REPLACEME with code to exit the loop>       
-######################################################################################
-# WEBEX BOT CODE
-#  Starts Webex bot to listen for and respond to /seconds messages.
-######################################################################################
+        return "Bearer MGVkYjVhZmQtZGY2Ni00YjgwLWFiZWMtNDRmNjhiNzRjZWIyYTZkNGU1ZjktMDhi_P0A1_251b8f7b-fbc7-4534-b240-867707e063a8"
 
-while True:
-    time.sleep(1)
-    GetParameters = {
-                            "roomId": roomIdToGetMessages,
-                            "max": 1
-                    }
-# 5. Provide the URL to the Webex messages API.    
-    r = requests.get("<!!!REPLACEME with URL!!!>", 
-                         params = GetParameters, 
-                         headers = {"Authorization": accessToken}
-                    )
-    # verify if the retuned HTTP status code is 200/OK
-    if not r.status_code ==  <!!!REPLACEME with http code>:
-        raise Exception( "Incorrect reply from Webex API. Status code: {}. Text: {}".format(r.status_code, r.text))
 
-    json_data = r.json()
-    if len(json_data["items"]) == 0:
-         <!!!REPLACEME with code for error handling>    
-    
-    messages = json_data["items"]
-    message = messages[0]["text"]
-    <!!!REPLACEME with print code to print message>  
-    
-    if message.find("/") == 0:    
-        if (message[1:].isdigit()):
-            seconds = int(message[1:])  
-        else:
-             <!!!REPLACEME with code for error handling>
-    
-    #for the sake of testing, the max number of seconds is set to 5.
-        if seconds > 5:
-            seconds = 5    
-            
-        time.sleep(seconds)     
-    
-# 6. Provide the URL to the ISS Current Location API.         
-        r = requests.get("<!!!REPLACEME with URL!!!>")
-        
-        json_data = <!!!REPLACEME with code>
-        
-        <!!!REPLACEME with code for error handling in case not success response>
+# 3. Get Webex rooms
+def get_webex_rooms(access_token):
+    response = requests.get(
+        "https://webexapis.com/v1/rooms",
+        headers={"Authorization": access_token}
+    )
 
-# 7. Record the ISS GPS coordinates and timestamp.
+    if response.status_code != 200:
+        raise Exception(f"Webex API error: {response.status_code} - {response.text}")
 
-        lat = json_data["<!!!REPLACEME!!!> with path to latitude key!!!>"]
-        lng = json_data["<!!!REPLACEME!!!> with path to longitude key!!!>"]
-        timestamp = json_data["<!!!REPLACEME!!!> with path to timestamp key!!!>"]
-        
-# 8. Convert the timestamp epoch value to a human readable date and time.
-        # Use the time.ctime function to convert the timestamp to a human readable date and time.
-        timeString = <!!!REPLACEME with conversion code!!!>       
-   
-# 9. Provide your Geoloaction API consumer key.
-    
-        mapsAPIGetParameters = { 
-                                <!!!REPLACEME with all the required paramenters by the api>
-                               }
-    
-# 10. Provide the URL to the Reverse GeoCode API.
-    # Get location information using the API reverse geocode service using the HTTP GET method
-        r = requests.get("<!!!REPLACEME with URL!!!>", 
-                             params = mapsAPIGetParameters
-                        )
+    rooms = response.json()["items"]
+    print("List of available rooms:")
+    for room in rooms:
+        print(f"Room Type: {room['type']} | Title: {room['title']}")
+    return rooms
 
-    # Verify if the returned JSON data from the API service are OK
-        json_data = <!!!REPLACEME with code>
-        
-        <!!!REPLACEME with code for error handling in case no response>
 
-# 11. Store the location received from the API in a required variables
-        CountryResult = json_data["<!!!REPLACEME!!!> with path to adminArea1 key!!!>"]
-        <!!!REPLACEME with code to save state, city, street etc>
-        
-        #Find the country name using ISO3611 country code
-        if not CountryResult == "XZ":
-            CountryResult = countries.get(CountryResult).name
+# Choose room to monitor
+def choose_room(rooms):
+    print("List of available rooms:")
+    for i, room in enumerate(rooms):
+        print(f"{i + 1}. {room['title']}")
 
-# 12. Complete the code to format the response message.
-#     Example responseMessage result: In Austin, Texas the ISS will fly over on Thu Jun 18 18:42:36 2020 for 242 seconds.
-        #responseMessage = "On {}, the ISS was flying over the following location: \n{} \n{}, {} \n{}\n({}\", {}\")".format(timeString, StreetResult, CityResult, StateResult, CountryResult, lat, lng)
+    while True:
+        room_name = input("Which room should be monitored? ")
+        for room in rooms:
+            if room_name.lower() in room["title"].lower():
+                print("Found room:", room["title"])
+                return room["id"]
+        print("Room not found. Please try again.")
 
-        if CountryResult == "XZ":
-            responseMessage = "On {}, the ISS was flying over a body of water at latitude {}° and longitude {}°.".format(timeString, lat, lng)
-        
-<!!!REPLACEME with if statements to compose the message to display the current ISS location in the Webex Team room!!!>
-        elif
-        else
-       
-        # print the response message
-        print("Sending to Webex: " +responseMessage)
 
-# 13. Complete the code to post the message to the Webex room.         
-        # the Webex HTTP headers, including the Authoriztion and Content-Type
-        HTTPHeaders = { 
-                             "Authorization": <!!!REPLACEME!!!>,
-                             "Content-Type": "application/json"
-                           }
-        
-        PostData = {
-                            "roomId": <!!!REPLACEME!!!>,
-                            "text": <!!!REPLACEME!!!>
-                        }
-        # Post the call to the Webex message API.
-        r = requests.post( "<!!!REPLACEME with URL!!!>", 
-                              data = json.dumps(<!!!REPLACEME!!!>), 
-                              headers = <!!!REPLACEME!!!>
-                         )
-        <!!!REPLACEME with code for error handling in case request not successfull>
-                
+# Get the latest message
+def get_latest_message(room_id, access_token):
+    params = {"roomId": room_id, "max": 1}
+    r = requests.get(
+        "https://webexapis.com/v1/messages",
+        params=params,
+        headers={"Authorization": access_token}
+    )
+    if r.status_code != 200:
+        print("Error fetching messages:", r.text)
+        return None
+
+    data = r.json()
+    if len(data["items"]) == 0:
+        return None
+    return data["items"][0]["text"]
+
+
+# Get ISS current location
+def get_iss_location():
+    r = requests.get("http://api.open-notify.org/iss-now.json")
+    if r.status_code != 200:
+        print("Error fetching ISS data:", r.text)
+        return None, None, None
+
+    data = r.json()
+    lat = data["iss_position"]["latitude"]
+    lng = data["iss_position"]["longitude"]
+    timestamp = data["timestamp"]
+    return lat, lng, timestamp
+
+
+# Get location from coordinates
+def get_location_from_coords(lat, lng, api_key):
+    params = {"key": api_key, "location": f"{lat},{lng}"}
+    r = requests.get("https://www.mapquestapi.com/geocoding/v1/reverse", params=params)
+
+    if r.status_code != 200:
+        print("Incorrect data from GeoLocation API:", r.text)
+        return "XZ", "Unknown", "Unknown"
+
+    data = r.json()
+    location = data["results"][0]["locations"][0]
+    country = location["adminArea1"]
+    state = location["adminArea3"]
+    city = location["adminArea5"]
+    return country, state, city
+
+
+# Post message to Webex
+def post_to_webex(room_id, access_token, message):
+    headers = {
+        "Authorization": access_token,
+        "Content-Type": "application/json"
+    }
+    data = {"roomId": room_id, "text": message}
+    r = requests.post(
+        "https://webexapis.com/v1/messages",
+        data=json.dumps(data),
+        headers=headers
+    )
+    if r.status_code != 200:
+        print("Error posting to Webex:", r.text)
+
+
+# Main program
+def main():
+    access_token = get_access_token()
+    rooms = get_webex_rooms(access_token)
+    room_id = choose_room(rooms)
+    geo_key = "KwKBVRqxrNymzfugaM6M5nhUSxNYwIYY"
+
+    print("Monitoring room for /seconds messages....\n")
+
+    while True:
+        time.sleep(2)
+        message = get_latest_message(room_id, access_token)
+        if not message:
+            continue
+
+        print(f"Received message: {message}")
+
+        if message.startswith("/"):
+            if message[1:].isdigit():
+                seconds = int(message[1:])
+                if seconds > 5:
+                    seconds = 5
+
+                time.sleep(seconds)
+                lat, lng, timestamp = get_iss_location()
+                if not lat or not lng:
+                    continue
+
+                timeString = time.ctime(timestamp)
+                country, state, city = get_location_from_coords(lat, lng, geo_key)
+
+                if country == "XZ":
+                    response = f"On {timeString}, the ISS was flying over a body of water at latitude {lat}° and longitude {lng}°."
+                else:
+                    response = f"On {timeString}, the ISS was flying over {city}, {state}, {country} ({lat}°, {lng}°)."
+
+                print("Sending to Webex:", response)
+                post_to_webex(room_id, access_token, response)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nBot stopped by user.")
